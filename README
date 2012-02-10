@@ -1,0 +1,32 @@
+
+Setup
+---
+
+The pedal is a USB HID device, and the kernel's hiddev driver will claim it and
+present it as a hiddev device (for example, /dev/usb/hiddev0). By defualt on
+Ubuntu system, udev does not create the device with permissions allowing
+reading by non-root users. So you need to add a new udev rule to allow
+userspace programs to read from the hiddev device.
+
+Included is a udev rule file called pedal.udev-rules. Copy it to your distro's
+udev rule directory with a name that will cause it to be read after the udev
+defaults. In Ubuntu, I copy it to '/etc/udev/rules.d/51-pedal.rules'.  This
+should work for Debian as well.
+
+Usage
+---
+
+Currently there is one application that makes use of the driver, pedal_mplayer.
+This program takes any arguments given and sends them to mplayer. The left,
+middle, and right pedals cause mplayer to rewind, pause/play, and fast-forward,
+respectively. The limitation is that mplayer does not take input from the
+console while being controlled by the pedal.
+
+Suggested mplayer arguments for transcribing:
+
+    pedal_mplayer -af scaletempo=scale=0.6 file.mp3
+
+To start mplayer at a specific point, use -ss
+
+    pedal_mplayer -ss 10:00 file.mp3
+
